@@ -47,6 +47,10 @@ async function write(relativePath, content) {
 }
 
 const styles = `
+[hidden] {
+  display: none !important;
+}
+
 :root {
   --paper: #fbfaf7;
   --white: #ffffff;
