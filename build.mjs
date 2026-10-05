@@ -82,14 +82,24 @@ a {
 }
 
 .site-header {
-  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(251, 250, 247, .92);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: blur(16px);
+  transition: border-color .25s ease;
+}
+
+.site-header.scrolled {
+  border-bottom-color: var(--soft-line);
 }
 
 .header-inner {
   max-width: var(--max-width);
-  height: 78px;
+  height: 82px;
   margin: 0 auto;
-  padding: 0 32px;
+  padding: 0 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -99,61 +109,88 @@ a {
   font-family: "Noto Serif KR", serif;
   font-size: 17px;
   font-weight: 500;
+  letter-spacing: -.03em;
   text-decoration: none;
 }
 
 .navigation {
   display: flex;
-  gap: 25px;
+  gap: 28px;
 }
 
 .navigation a {
+  position: relative;
+  padding: 5px 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   text-decoration: none;
+}
+
+.navigation a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 100%;
+  bottom: 0;
+  height: 1px;
+  background: var(--ink);
+  transition: right .25s ease;
+}
+
+.navigation a:hover {
+  color: var(--ink);
+}
+
+.navigation a:hover::after {
+  right: 0;
 }
 
 .hero {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 115px 32px 105px;
+  padding: 126px 36px 116px;
   display: grid;
   grid-template-columns: 1.35fr 0.65fr;
-  gap: 70px;
+  gap: 80px;
   align-items: end;
 }
 
 .eyebrow {
+  display: block;
+  margin-bottom: 28px;
   color: var(--accent);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.18em;
 }
 
 .hero h1 {
-  margin: 24px 0 0;
+  margin: 0;
   font-family: "Noto Serif KR", serif;
-  font-size: clamp(42px, 6vw, 76px);
+  font-size: clamp(42px, 6.2vw, 78px);
   font-weight: 400;
   line-height: 1.28;
   letter-spacing: -0.055em;
 }
 
 .hero-description {
-  margin: 0;
+  margin: 0 0 8px;
   color: var(--muted);
   font-family: "Noto Serif KR", serif;
+  font-size: 16px;
   line-height: 2;
 }
 
 .archive {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 32px 120px;
+  padding: 0 36px 130px;
 }
 
 .toolbar {
-  padding: 22px 0;
+  padding: 25px 0;
+  align-items: center;
+  justify-content: space-between;
   display: flex;
   gap: 18px;
   border-top: 1px solid var(--ink);
@@ -166,6 +203,13 @@ a {
   color: var(--muted);
   background: none;
   cursor: pointer;
+  font-size: 13px;
+}
+
+.filters {
+  display: flex;
+  gap: 22px;
+  flex-wrap: wrap;
 }
 
 .filter-button.active {
@@ -174,24 +218,26 @@ a {
 }
 
 .post-card {
-  padding: 40px 0;
+  padding: 44px 0;
   display: grid;
-  grid-template-columns: 105px minmax(0, 1fr) 120px;
-  gap: 30px;
-  border-bottom: 1px solid var(--line);
+  grid-template-columns: 110px minmax(0, 1fr) 180px;
+  gap: 36px;
+  border-bottom: 1px solid var(--soft-line);
   text-decoration: none;
 }
 
 .post-type {
+  padding-top: 5px;
   color: var(--muted);
   font-size: 10px;
-  letter-spacing: 0.14em;
+  font-weight: 500;
+  letter-spacing: 0.16em;
 }
 
 .post-card h2 {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-family: "Noto Serif KR", serif;
-  font-size: clamp(23px, 2.5vw, 33px);
+  font-size: clamp(23px, 2.6vw, 34px);
   font-weight: 500;
   line-height: 1.45;
   letter-spacing: -0.04em;
@@ -200,24 +246,74 @@ a {
 .post-card p {
   margin: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1.8;
 }
 
 .post-date {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding-top: 5px;
   color: var(--muted);
-  font-size: 11px;
-  text-align: right;
+  font-size: 12px;
+}
+
+.arrow {
+  font-size: 19px;
+  transition: transform .2s ease;
+}
+
+.post-card:hover h2 {
+  color: var(--accent);
+}
+
+.post-card:hover .arrow {
+  transform: translate(4px, -4px);
+}
+
+.search-wrap {
+  position: relative;
+  width: min(280px, 42vw);
+}
+
+.search-wrap input {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 8px 26px 8px 0;
+  color: var(--ink);
+  background: transparent;
+  outline: none;
+  font: inherit;
+  font-size: 13px;
+}
+
+.search-wrap input:focus {
+  border-bottom-color: var(--ink);
+}
+
+.search-icon {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 15px;
+  pointer-events: none;
 }
 
 .detail {
-  max-width: 820px;
+  max-width: 860px;
   margin: 0 auto;
-  padding: 80px 32px 130px;
+  padding: 85px 36px 140px;
 }
 
 .back-link {
   display: inline-block;
-  margin-bottom: 65px;
+  margin-bottom: 70px;
   color: var(--muted);
   border-bottom: 1px solid var(--line);
   font-size: 12px;
@@ -225,50 +321,53 @@ a {
 }
 
 .detail-kicker {
+  margin-bottom: 25px;
   color: var(--accent);
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.15em;
 }
 
 .detail h1 {
-  margin: 24px 0 0;
+  margin: 0;
   font-family: "Noto Serif KR", serif;
-  font-size: clamp(38px, 6vw, 60px);
+  font-size: clamp(38px, 6vw, 62px);
   font-weight: 500;
   line-height: 1.35;
   letter-spacing: -0.055em;
 }
 
 .subtitle {
+  margin: 23px 0 0;
   color: var(--muted);
   font-family: "Noto Serif KR", serif;
-  font-size: 17px;
+  font-size: 18px;
+  line-height: 1.8;
 }
 
 .meta {
-  margin-top: 40px;
-  padding: 17px 0;
+  margin-top: 45px;
+  padding: 18px 0;
   display: flex;
   gap: 28px;
   flex-wrap: wrap;
   color: var(--muted);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .cover-image {
   width: 100%;
   max-height: 560px;
-  margin-top: 55px;
+  margin-top: 60px;
   object-fit: cover;
 }
 
 .introduction {
-  max-width: 650px;
-  margin: 65px auto 0;
-  padding: 40px 0;
+  max-width: 680px;
+  margin: 76px auto 0;
+  padding: 44px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
@@ -276,24 +375,25 @@ a {
 .introduction p {
   margin: 0;
   font-family: "Noto Serif KR", serif;
-  font-size: 17px;
+  color: #4f4c47;
+  font-size: 18px;
   line-height: 2;
 }
 
 .original-link {
   display: inline-block;
-  margin-top: 30px;
+  margin-top: 34px;
   padding-bottom: 4px;
   color: var(--accent);
   border-bottom: 1px solid var(--accent);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   text-decoration: none;
 }
 
 .tags {
-  max-width: 650px;
-  margin: 45px auto 0;
+  max-width: 680px;
+  margin: 55px auto 0;
   display: flex;
   gap: 7px;
   flex-wrap: wrap;
@@ -316,17 +416,17 @@ a {
 .site-footer {
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 30px 32px 45px;
+  padding: 35px 36px 48px;
   display: flex;
   justify-content: space-between;
   color: #99958d;
   border-top: 1px solid var(--line);
-  font-size: 10px;
+  font-size: 11px;
 }
 
 @media (max-width: 700px) {
   .header-inner {
-    height: 66px;
+    height: 68px;
     padding: 0 20px;
   }
 
@@ -335,39 +435,53 @@ a {
   }
 
   .hero {
-    padding: 72px 20px 75px;
+    padding: 78px 20px 82px;
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 38px;
   }
 
   .hero h1 {
-    font-size: 42px;
+    font-size: 43px;
   }
 
   .archive {
-    padding: 0 20px 85px;
+    padding: 0 20px 90px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .search-wrap {
+    width: 100%;
   }
 
   .post-card {
     grid-template-columns: 1fr;
-    gap: 10px;
-    padding: 32px 0;
+    gap: 13px;
+    padding: 34px 0;
   }
 
   .post-date {
-    text-align: left;
+    justify-content: flex-start;
+  }
+
+  .post-date .arrow {
+    margin-left: auto;
   }
 
   .detail {
-    padding: 50px 20px 90px;
+    padding: 55px 20px 100px;
   }
 
   .back-link {
-    margin-bottom: 45px;
+    margin-bottom: 50px;
   }
 
   .detail h1 {
-    font-size: 38px;
+    font-size: 39px;
   }
 
   .site-footer {
@@ -427,12 +541,12 @@ function createPage({
   <header class="site-header">
     <div class="header-inner">
       <a class="brand" href="/">
-        ${escapeHtml(config.title || '정지호의 미술 아카이브')}
+        ${escapeHtml(config.title || '\uc815\uc9c0\ud638\uc758 \ubbf8\uc220 \uc544\uce74\uc774\ube0c')}
       </a>
 
       <nav class="navigation">
-        <a href="/#columns">칼럼</a>
-        <a href="/#exhibitions">전시 기록</a>
+        <a href="/#columns">\uce7c\ub7fc</a>
+        <a href="/#exhibitions">\uc804\uc2dc \uae30\ub85d</a>
       </nav>
     </div>
   </header>
@@ -440,7 +554,7 @@ function createPage({
   ${body}
 
   <footer class="site-footer">
-    <span>© ${new Date().getFullYear()} ${escapeHtml(config.author || 'SOGO')}</span>
+    <span>\u00a9 ${new Date().getFullYear()} ${escapeHtml(config.author || 'SOGO')}</span>
     <span>Words, exhibitions and places worth remembering.</span>
   </footer>
 </body>
@@ -454,7 +568,7 @@ const postCards = posts.map(post => `
     href="${getPostPath(post)}"
   >
     <span class="post-type">
-      ${post.type === 'COLUMN' ? 'COLUMN' : 'EXHIBITION NOTE'}
+      ${post.type === 'COLUMN' ? 'FULL COLUMN' : 'BLOG NOTE'}
     </span>
 
     <span>
@@ -462,7 +576,10 @@ const postCards = posts.map(post => `
       <p>${escapeHtml(post.summary)}</p>
     </span>
 
-    <span class="post-date">${escapeHtml(post.date)}</span>
+    <span class="post-date">
+      <span>${escapeHtml(post.date)}</span>
+      <span class="arrow" aria-hidden="true">\u2197</span>
+    </span>
   </a>
 `).join('');
 
@@ -470,8 +587,8 @@ const homeBody = `
 <main>
   <section class="hero">
     <div>
-      <span class="eyebrow">ART · EXHIBITION · WRITING</span>
-      <h1>보고, 걷고,<br>오래 생각한 것들.</h1>
+      <span class="eyebrow">ART \u00b7 EXHIBITION \u00b7 WRITING</span>
+      <h1>\ubcf4\uace0, \uac77\uace0,<br>\uc624\ub798 \uc0dd\uac01\ud55c \uac83\ub4e4.</h1>
     </div>
 
     <p class="hero-description">
@@ -481,18 +598,45 @@ const homeBody = `
 
   <section class="archive">
     <div class="toolbar">
-      <button class="filter-button active" data-filter="ALL">전체</button>
-      <button class="filter-button" data-filter="COLUMN">칼럼</button>
-      <button class="filter-button" data-filter="BLOG">전시 기록</button>
+      <div class="filters">
+        <button class="filter-button active" data-filter="ALL">\uc804\uccb4</button>
+        <button class="filter-button" data-filter="COLUMN">\uce7c\ub7fc</button>
+        <button class="filter-button" data-filter="BLOG">\uc804\uc2dc \uae30\ub85d</button>
+      </div>
+
+      <label class="search-wrap">
+        <input id="search-input" type="search" placeholder="\uc81c\ubaa9, \uc18c\uac1c\ubb38, \ud0dc\uadf8 \uac80\uc0c9" aria-label="\uc544\uce74\uc774\ube0c \uac80\uc0c9">
+        <span class="search-icon" aria-hidden="true">\u2315</span>
+      </label>
     </div>
 
     <div id="post-list">
-      ${postCards || '<p class="empty">등록된 글이 없습니다.</p>'}
+      ${postCards || '<p class="empty">\ub4f1\ub85d\ub41c \uae00\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.</p>'}
     </div>
   </section>
 </main>
 
 <script>
+  let activeFilter = 'ALL';
+
+  function updateVisiblePosts() {
+    const query = (document.querySelector('#search-input').value || '')
+      .trim()
+      .toLowerCase();
+
+    document.querySelectorAll('.post-card').forEach(post => {
+      const matchesFilter =
+        activeFilter === 'ALL' ||
+        post.dataset.kind === activeFilter;
+
+      const matchesQuery =
+        !query ||
+        post.textContent.toLowerCase().includes(query);
+
+      post.hidden = !(matchesFilter && matchesQuery);
+    });
+  }
+
   document.querySelectorAll('.filter-button').forEach(button => {
     button.addEventListener('click', () => {
       document.querySelectorAll('.filter-button').forEach(item => {
@@ -500,28 +644,35 @@ const homeBody = `
       });
 
       button.classList.add('active');
-
-      document.querySelectorAll('.post-card').forEach(post => {
-        post.hidden =
-          button.dataset.filter !== 'ALL' &&
-          post.dataset.kind !== button.dataset.filter;
-      });
+      activeFilter = button.dataset.filter;
+      updateVisiblePosts();
     });
   });
+
+  document.querySelector('#search-input')
+    .addEventListener('input', updateVisiblePosts);
+
+  const siteHeader = document.querySelector('.site-header');
+  const updateHeader = () => {
+    siteHeader.classList.toggle('scrolled', window.scrollY > 4);
+  };
+
+  window.addEventListener('scroll', updateHeader, { passive: true });
+  updateHeader();
 </script>
 `;
 
 await write(
   'index.html',
   createPage({
-    title: config.title || '정지호의 미술 아카이브',
+    title: config.title || '\uc815\uc9c0\ud638\uc758 \ubbf8\uc220 \uc544\uce74\uc774\ube0c',
     description: config.description || '',
     canonical: `${SITE_URL}/`,
     body: homeBody,
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
-      name: config.title || '정지호의 미술 아카이브',
+      name: config.title || '\uc815\uc9c0\ud638\uc758 \ubbf8\uc220 \uc544\uce74\uc774\ube0c',
       url: `${SITE_URL}/`
     }
   })
@@ -556,19 +707,19 @@ for (const post of posts) {
         target="_blank"
         rel="noopener noreferrer"
       >
-        ${escapeHtml(post.ctaLabel || '전체 글 읽기')} ↗
+        ${escapeHtml(post.ctaLabel || '\uc804\uccb4 \uae00 \uc77d\uae30')} \u2197
       </a>`
     : '';
 
   const detailBody = `
   <main class="detail">
-    <a class="back-link" href="/">← 목록으로 돌아가기</a>
+    <a class="back-link" href="/">\u2190 \ubaa9\ub85d\uc73c\ub85c \ub3cc\uc544\uac00\uae30</a>
 
     <article>
       <header>
         <div class="detail-kicker">
-          ${post.type === 'COLUMN' ? 'COLUMN' : 'EXHIBITION NOTE'}
-          · ${escapeHtml(post.category)}
+          ${post.type === 'COLUMN' ? 'FULL COLUMN' : 'BLOG NOTE'}
+          \u00b7 ${escapeHtml(post.category)}
         </div>
 
         <h1>${escapeHtml(post.title)}</h1>
@@ -613,7 +764,7 @@ for (const post of posts) {
   await write(
     `${folder}/${post.id}/index.html`,
     createPage({
-      title: `${post.title} — ${config.title}`,
+      title: `${post.title} \u2014 ${config.title}`,
       description: post.summary,
       canonical: getPostUrl(post),
       image: post.imageUrl,
@@ -650,14 +801,14 @@ Sitemap: ${SITE_URL}/sitemap.xml
 await write(
   '404.html',
   createPage({
-    title: `페이지를 찾을 수 없습니다 — ${config.title}`,
-    description: '요청한 페이지를 찾을 수 없습니다.',
+    title: `\ud398\uc774\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4 \u2014 ${config.title}`,
+    description: '\uc694\uccad\ud55c \ud398\uc774\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.',
     canonical: `${SITE_URL}/404.html`,
     body: `
       <main class="detail">
-        <h1>페이지를 찾을 수 없습니다.</h1>
+        <h1>\ud398\uc774\uc9c0\ub97c \ucc3e\uc744 \uc218 \uc5c6\uc2b5\ub2c8\ub2e4.</h1>
         <p>
-          <a class="back-link" href="/">아카이브로 돌아가기</a>
+          <a class="back-link" href="/">\uc544\uce74\uc774\ube0c\ub85c \ub3cc\uc544\uac00\uae30</a>
         </p>
       </main>
     `
