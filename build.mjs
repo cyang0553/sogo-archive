@@ -1,9 +1,7 @@
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
-const API_URL =
-  process.env.ARCHIVE_API_URL ||
-  'https://script.google.com/macros/s/AKfycbzU72-9Dz01WW7lESYAyUXBH_xIc_9Bcamd6SXksybve1I81Un3bBVXrPRHb9-2l913/exec?output=json';
+const API_URL = process.env.ARCHIVE_API_URL || 'https://script.google.com/macros/s/AKfycbzU72-9Dz01WW7lESYAyUXBH_xIc_9Bcamd6SXksybve1I81Un3bBVXrPRHb9-2l913/exec?output=json';
 
 const SITE_URL = (
   process.env.SITE_URL || 'https://sogo-archive.pages.dev'
