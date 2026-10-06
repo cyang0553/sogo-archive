@@ -384,6 +384,23 @@ a {
   line-height: 2;
 }
 
+.about-copy {
+  max-width: 680px;
+  margin: 76px auto 0;
+  font-family: "Noto Serif KR", serif;
+  font-size: 17px;
+  line-height: 2.15;
+  letter-spacing: -0.015em;
+}
+
+.about-copy p {
+  margin: 0 0 2em;
+}
+
+.about-copy p:last-child {
+  margin-bottom: 0;
+}
+
 .original-link {
   display: inline-block;
   margin-top: 34px;
@@ -488,6 +505,12 @@ a {
     font-size: 39px;
   }
 
+  .about-copy {
+    margin-top: 55px;
+    font-size: 16px;
+    line-height: 2;
+  }
+  
   .site-footer {
     padding: 25px 20px 35px;
     flex-direction: column;
@@ -549,8 +572,9 @@ function createPage({
       </a>
 
       <nav class="navigation">
-        <a href="/#columns">\uce7c\ub7fc</a>
-        <a href="/#exhibitions">\uc804\uc2dc \uae30\ub85d</a>
+        <a href="/#columns">칼럼</a>
+        <a href="/#exhibitions">전시 기록</a>
+        <a href="/about/">소개</a>
       </nav>
     </div>
   </header>
@@ -565,7 +589,7 @@ function createPage({
 </html>`;
 }
 
-const postCards = posts.map(post => `
+const createPostCards = postList => postList.map(post => `
   <a
     class="post-card"
     data-kind="${post.type}"
@@ -582,10 +606,18 @@ const postCards = posts.map(post => `
 
     <span class="post-date">
       <span>${escapeHtml(post.date)}</span>
-      <span class="arrow" aria-hidden="true">\u2197</span>
+      <span class="arrow" aria-hidden="true">↗</span>
     </span>
   </a>
 `).join('');
+
+const postCards = createPostCards(posts);
+
+const selectedPosts = posts
+  .filter(post => post.featured === true)
+  .slice(0, 4);
+
+const selectedPostCards = createPostCards(selectedPosts);
 
 const homeBody = `
 <main>
@@ -599,6 +631,18 @@ const homeBody = `
       ${escapeHtml(config.description || '')}
     </p>
   </section>
+
+    ${selectedPostCards ? `
+  <section class="archive" id="selected">
+    <div class="toolbar">
+      <span class="eyebrow" style="margin: 0;">SELECTED</span>
+    </div>
+
+    <div id="selected-list">
+      ${selectedPostCards}
+    </div>
+  </section>
+  ` : ''}
 
   <section class="archive">
     <div class="toolbar">
@@ -628,7 +672,7 @@ const homeBody = `
       .trim()
       .toLowerCase();
 
-    document.querySelectorAll('.post-card').forEach(post => {
+    document.querySelectorAll('#post-list .post-card').forEach(post => {
       const matchesFilter =
         activeFilter === 'ALL' ||
         post.dataset.kind === activeFilter;
@@ -678,6 +722,63 @@ await write(
       '@type': 'WebSite',
       name: config.title || '\uc815\uc9c0\ud638\uc758 \ubbf8\uc220 \uc544\uce74\uc774\ube0c',
       url: `${SITE_URL}/`
+    }
+  })
+);
+
+const about = config.about || {};
+
+const aboutParagraphs = String(about.introduction || '')
+  .split(/\n\s*\n/)
+  .filter(paragraph => paragraph.trim())
+  .map(paragraph => `<p>${escapeHtml(paragraph.trim())}</p>`)
+  .join('');
+
+const aboutBody = `
+<main class="detail">
+  <a class="back-link" href="/">← 아카이브로 돌아가기</a>
+
+  <article>
+    <header>
+      <div class="detail-kicker">ABOUT</div>
+      <h1>${escapeHtml(about.activityName || 'SOGO')}</h1>
+
+      ${about.name
+        ? `<p class="subtitle">${escapeHtml(about.name)}</p>`
+        : ''
+      }
+    </header>
+
+    <div class="about-copy">
+      ${aboutParagraphs}
+    </div>
+
+    ${about.email
+      ? `
+        <div class="meta">
+          <span>CONTACT</span>
+          <span>${escapeHtml(about.email)}</span>
+        </div>
+      `
+      : ''
+    }
+  </article>
+</main>
+`;
+
+await write(
+  'about/index.html',
+  createPage({
+    title: `소개 — ${config.title}`,
+    description: about.introduction || config.description || '',
+    canonical: `${SITE_URL}/about/`,
+    body: aboutBody,
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      name: about.name || config.author || 'SOGO',
+      alternateName: about.activityName || 'SOGO',
+      url: `${SITE_URL}/about/`
     }
   })
 );
@@ -780,6 +881,7 @@ for (const post of posts) {
 
 const siteUrls = [
   `${SITE_URL}/`,
+  `${SITE_URL}/about/`,
   ...posts.map(getPostUrl)
 ];
 
