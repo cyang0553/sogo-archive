@@ -1,4 +1,4 @@
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const API_URL = process.env.ARCHIVE_API_URL || 'https://script.google.com/macros/s/AKfycbzU72-9Dz01WW7lESYAyUXBH_xIc_9Bcamd6SXksybve1I81Un3bBVXrPRHb9-2l913/exec?output=json';
@@ -21,6 +21,9 @@ const config = data.config || {};
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
+await copyFile('og-image.png', join(OUT, 'og-image.png'));
+
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 const escapeHtml = (value = '') =>
   String(value).replace(/[&<>"']/g, character => ({
@@ -527,9 +530,7 @@ function createPage({
   body,
   structuredData = null
 }) {
-  const socialImage = image
-    ? `<meta property="og:image" content="${escapeHtml(image)}">`
-    : '';
+  const resolvedImage = image || DEFAULT_OG_IMAGE;
 
   const jsonLd = structuredData
     ? `<script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>`
@@ -549,9 +550,13 @@ function createPage({
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${escapeHtml(canonical)}">
-  ${socialImage}
+  <meta property="og:image" content="${escapeHtml(resolvedImage)}">
+  <meta property="og:image:alt" content="${escapeHtml(title)}">
 
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${escapeHtml(title)}">
+  <meta name="twitter:description" content="${escapeHtml(description)}">
+  <meta name="twitter:image" content="${escapeHtml(resolvedImage)}">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
