@@ -572,8 +572,8 @@ function createPage({
       </a>
 
       <nav class="navigation">
-        <a href="/#columns">칼럼</a>
-        <a href="/#exhibitions">전시 기록</a>
+        <a href="/?filter=COLUMN#archive">칼럼</a>
+        <a href="/?filter=BLOG#archive">전시 기록</a>
         <a href="/about/">소개</a>
       </nav>
     </div>
@@ -644,7 +644,7 @@ const homeBody = `
   </section>
   ` : ''}
 
-  <section class="archive">
+  <section class="archive" id="archive">
     <div class="toolbar">
       <div class="filters">
         <button class="filter-button active" data-filter="ALL">\uc804\uccb4</button>
@@ -665,7 +665,13 @@ const homeBody = `
 </main>
 
 <script>
-  let activeFilter = 'ALL';
+  const requestedFilter =
+    new URLSearchParams(window.location.search).get('filter');
+
+  let activeFilter =
+    requestedFilter === 'COLUMN' || requestedFilter === 'BLOG'
+      ? requestedFilter
+      : 'ALL';
 
   function updateVisiblePosts() {
     const query = (document.querySelector('#search-input').value || '')
@@ -699,6 +705,15 @@ const homeBody = `
 
   document.querySelector('#search-input')
     .addEventListener('input', updateVisiblePosts);
+
+      document.querySelectorAll('.filter-button').forEach(button => {
+    button.classList.toggle(
+      'active',
+      button.dataset.filter === activeFilter
+    );
+  });
+
+  updateVisiblePosts();
 
   const siteHeader = document.querySelector('.site-header');
   const updateHeader = () => {
