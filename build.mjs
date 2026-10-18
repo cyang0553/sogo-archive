@@ -588,7 +588,7 @@ function createPage({
 
   <footer class="site-footer">
     <span>\u00a9 ${new Date().getFullYear()} ${escapeHtml(config.author || 'SOGO')}</span>
-    <span>Words, exhibitions and places worth remembering.</span>
+    <span>All rights reserved.</span>
   </footer>
 </body>
 </html>`;
