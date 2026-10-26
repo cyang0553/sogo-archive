@@ -355,13 +355,34 @@ a {
 .meta {
   margin-top: 45px;
   padding: 18px 0;
-  display: flex;
-  gap: 28px;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  column-gap: 14px;
+  row-gap: 20px;
   color: var(--muted);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   font-size: 12px;
+}
+
+.elsewhere-meta {
+  margin-top: 0;
+  border-top: 0;
+}
+
+.elsewhere-links {
+  display: flex;
+  gap: 10px 30px;
+  flex-wrap: wrap;
+}
+
+.elsewhere-links a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.elsewhere-links a:hover {
+  color: var(--ink);
 }
 
 .cover-image {
@@ -778,6 +799,14 @@ const aboutBody = `
         <div class="meta">
           <span>CONTACT</span>
           <span>${escapeHtml(about.email)}</span>
+        </div>
+
+        <div class="meta elsewhere-meta">
+          <span>ELSEWHERE</span>
+          <span class="elsewhere-links">
+            <a href="https://blog.naver.com/longtempssogo" target="_blank" rel="noopener noreferrer">SOGO BLOG — Korean ↗</a>
+            <a href="https://sogojournal.blogspot.com/" target="_blank" rel="noopener noreferrer">SOGO JOURNAL — English ↗</a>
+          </span>
         </div>
       `
       : ''
