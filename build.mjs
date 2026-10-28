@@ -641,6 +641,10 @@ const postCards = createPostCards(posts);
 
 const selectedPosts = posts
   .filter(post => post.featured === true)
+  .sort((a, b) =>
+    (Number(a.featuredOrder) || 4) -
+    (Number(b.featuredOrder) || 4)
+  )
   .slice(0, 4);
 
 const selectedPostCards = createPostCards(selectedPosts);
@@ -661,7 +665,7 @@ const homeBody = `
     ${selectedPostCards ? `
   <section class="archive" id="selected">
     <div class="toolbar">
-      <span class="eyebrow" style="margin: 0;">SELECTED</span>
+      <span class="eyebrow" style="margin: 0;">FEATURED</span>
     </div>
 
     <div id="selected-list">
