@@ -716,7 +716,7 @@ const homeBody = `
 
       const matchesQuery =
         !query ||
-        `${post.textContent} ${post.dataset.tags || ''}`
+        (post.textContent + ' ' + (post.dataset.tags || ''))
           .toLowerCase()
           .includes(query);
 
