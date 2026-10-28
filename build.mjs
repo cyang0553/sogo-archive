@@ -462,6 +462,150 @@ a {
   text-align: center;
 }
 
+.install-page {
+  max-width: 912px;
+  margin: 0 auto;
+  padding: 78px 36px 64px;
+}
+
+.install-intro {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 60px;
+  align-items: end;
+  margin: 23px 0 60px;
+}
+
+.install-intro h1 {
+  margin: 0;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 38px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.install-page p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.install-tabs {
+  display: flex;
+  gap: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.install-tabs button {
+  padding: 14px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.install-tabs button[aria-selected="true"] {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+
+.install-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  padding: 35px 0 38px;
+  border-bottom: 1px solid var(--line);
+}
+
+.install-steps[hidden] {
+  display: none;
+}
+
+.install-number {
+  display: block;
+  margin-bottom: 25px;
+  color: var(--muted);
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.install-step h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+.install-menu-hint {
+  margin-top: 22px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.install-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-top: 25px;
+}
+
+.install-bottom p,
+.install-bottom .back-link {
+  font-size: 11px;
+}
+
+.install-bottom .back-link {
+  color: var(--muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .install-page {
+    padding: 45px 20px;
+  }
+
+  .install-intro {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    margin-bottom: 35px;
+  }
+
+  .install-intro h1 {
+    font-size: 29px;
+  }
+
+  .install-steps {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0;
+  }
+
+  .install-step {
+    padding: 25px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .install-step:last-child {
+    border-bottom: 0;
+  }
+
+  .install-number {
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+
+  .install-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+}
+
 .site-footer {
   max-width: var(--max-width);
   margin: 0 auto;
@@ -471,6 +615,12 @@ a {
   color: #99958d;
   border-top: 1px solid var(--line);
   font-size: 11px;
+}
+.footer-install {
+  display: none;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 @media (max-width: 700px) {
@@ -543,6 +693,24 @@ a {
     padding: 25px 20px 35px;
     flex-direction: column;
     gap: 6px;
+  }
+  .footer-tagline {
+    display: none;
+  }
+
+  .footer-install {
+    display: inline;
+    align-self: flex-start;
+  }
+
+  @media (display-mode: standalone) {
+    .footer-tagline {
+      display: inline;
+    }
+
+    .footer-install {
+      display: none;
+    }
   }
 }
 `;
@@ -617,8 +785,58 @@ function createPage({
 
   <footer class="site-footer">
     <span>\u00a9 ${new Date().getFullYear()} ${escapeHtml(config.author || 'SOGO')}</span>
-    <span>Art, exhibitions and visual culture.</span>
+    <span class="footer-tagline">Art, exhibitions and visual culture.</span>
+    <a class="footer-install" href="/install/">홈 화면에 추가</a>
   </footer>
+    <script>
+    (function () {
+      var tabs = document.querySelectorAll('[data-install-tab]');
+
+      function selectInstallTab(platform) {
+        tabs.forEach(function (tab) {
+          var selected = tab.dataset.installTab === platform;
+          tab.setAttribute('aria-selected', String(selected));
+        });
+
+        var iosPanel = document.getElementById('install-ios');
+        var androidPanel = document.getElementById('install-android');
+
+        if (iosPanel) iosPanel.hidden = platform !== 'ios';
+        if (androidPanel) androidPanel.hidden = platform !== 'android';
+      }
+
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          selectInstallTab(tab.dataset.installTab);
+        });
+      });
+
+      if (tabs.length) {
+        selectInstallTab(
+          /Android/i.test(navigator.userAgent) ? 'android' : 'ios'
+        );
+      }
+
+      var isStandalone =
+        window.matchMedia('(display-mode: standalone)').matches ||
+        navigator.standalone === true;
+
+      if (isStandalone) {
+        if (
+          window.location.pathname === '/install/' ||
+          window.location.pathname === '/install'
+        ) {
+          window.location.replace('/');
+          return;
+        }
+        var tagline = document.querySelector('.footer-tagline');
+        var installLink = document.querySelector('.footer-install');
+
+        if (tagline) tagline.style.display = 'inline';
+        if (installLink) installLink.style.display = 'none';
+      }
+    })();
+  </script>
 </body>
 </html>`;
 }
@@ -844,6 +1062,132 @@ await write(
       alternateName: about.activityName || 'SOGO',
       url: `${SITE_URL}/about/`
     }
+  })
+);
+
+const installBody = `
+  <main class="install-page">
+    <span class="eyebrow">SOGO ARCHIVE · HOME SCREEN</span>
+
+    <section class="install-intro">
+      <h1>아카이브를<br>홈 화면에 두세요.</h1>
+      <p>
+        별도의 다운로드 없이,<br>
+        아이콘을 눌러 소고 아카이브를 열 수 있습니다.
+      </p>
+    </section>
+
+    <div class="install-tabs" role="tablist" aria-label="기기 선택">
+      <button
+        type="button"
+        id="install-tab-ios"
+        role="tab"
+        aria-selected="true"
+        aria-controls="install-ios"
+        data-install-tab="ios"
+      >iOS</button>
+      <button
+        type="button"
+        id="install-tab-android"
+        role="tab"
+        aria-selected="false"
+        aria-controls="install-android"
+        data-install-tab="android"
+      >Android</button>
+    </div>
+
+    <section
+      class="install-steps"
+      id="install-ios"
+      role="tabpanel"
+      aria-labelledby="install-tab-ios"
+    >
+      <div class="install-step">
+        <span class="install-number">01</span>
+        <h2>Safari에서 열기</h2>
+        <p>
+          카카오톡 등 다른 앱에서 보고 있다면
+          Safari로 열어주세요.
+        </p>
+      </div>
+
+      <div class="install-step">
+        <span class="install-number">02</span>
+        <h2>홈 화면에 추가</h2>
+        <p>
+          Safari의 공유 메뉴에서
+          ‘홈 화면에 추가’를 찾아 선택하세요.
+        </p>
+        <div class="install-menu-hint">
+          공유 → 홈 화면에 추가
+        </div>
+      </div>
+
+      <div class="install-step">
+        <span class="install-number">03</span>
+        <h2>‘추가’를 누르면 완료</h2>
+        <p>
+          ‘웹 앱으로 열기’를 켜고 추가하세요.
+          홈 화면에 소고 아이콘이 나타납니다.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="install-steps"
+      id="install-android"
+      role="tabpanel"
+      aria-labelledby="install-tab-android"
+      hidden
+    >
+      <div class="install-step">
+        <span class="install-number">01</span>
+        <h2>Chrome에서 열기</h2>
+        <p>
+          카카오톡 등 다른 앱에서 보고 있다면
+          Chrome으로 열어주세요.
+        </p>
+      </div>
+
+      <div class="install-step">
+        <span class="install-number">02</span>
+        <h2>홈 화면에 추가</h2>
+        <p>
+          Chrome의 ⋮ 메뉴에서
+          ‘홈 화면에 추가’를 찾아 선택하세요.
+        </p>
+        <div class="install-menu-hint">
+          ⋮ 메뉴 → 홈 화면에 추가
+        </div>
+      </div>
+
+      <div class="install-step">
+        <span class="install-number">03</span>
+        <h2>‘추가’를 누르면 완료</h2>
+        <p>
+          확인창의 안내에 따라 ‘추가’를 누르세요.
+          홈 화면에 소고 아이콘이 나타납니다.
+        </p>
+      </div>
+    </section>
+
+    <div class="install-bottom">
+      <p>
+        이용에는 인터넷 연결이 필요합니다.<br>
+        기기와 브라우저에 따라 메뉴 이름이 다를 수 있습니다.
+      </p>
+      <a class="back-link" href="/">아카이브로 돌아가기</a>
+    </div>
+  </main>
+`;
+
+await write(
+  'install/index.html',
+  createPage({
+    title: `홈 화면에 추가 — ${config.title}`,
+    description: '소고 아카이브를 모바일 홈 화면에 추가하는 방법을 안내합니다.',
+    canonical: `${SITE_URL}/install/`,
+    body: installBody
   })
 );
 
