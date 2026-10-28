@@ -541,8 +541,17 @@ a {
 
 .install-menu-hint {
   margin-top: 22px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--muted);
   font-size: 12px;
+}
+
+.install-hint-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
 }
 
 .install-bottom {
@@ -560,8 +569,8 @@ a {
 
 .install-bottom .back-link {
   color: var(--muted);
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
 }
 
 @media (max-width: 640px) {
@@ -1067,7 +1076,7 @@ await write(
 
 const installBody = `
   <main class="install-page">
-    <span class="eyebrow">SOGO ARCHIVE · HOME SCREEN</span>
+    <span class="eyebrow">SOGO ARCHIVE · WEB APP</span>
 
     <section class="install-intro">
       <h1>아카이브를<br>홈 화면에 두세요.</h1>
@@ -1119,7 +1128,22 @@ const installBody = `
           ‘홈 화면에 추가’를 찾아 선택하세요.
         </p>
         <div class="install-menu-hint">
-          공유 → 홈 화면에 추가
+          <svg
+            class="install-hint-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            role="img"
+            aria-label="공유"
+          >
+            <path d="M12 16V3M7 8l5-5 5 5"></path>
+            <path d="M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"></path>
+          </svg>
+          <span>→ 홈 화면에 추가</span>
         </div>
       </div>
 
@@ -1157,7 +1181,19 @@ const installBody = `
           ‘홈 화면에 추가’를 찾아 선택하세요.
         </p>
         <div class="install-menu-hint">
-          ⋮ 메뉴 → 홈 화면에 추가
+          <svg
+            class="install-hint-icon"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            role="img"
+            aria-label="메뉴"
+          >
+            <circle cx="12" cy="5" r="1.5"></circle>
+            <circle cx="12" cy="12" r="1.5"></circle>
+            <circle cx="12" cy="19" r="1.5"></circle>
+          </svg>
+          <span>→ 홈 화면에 추가</span>
         </div>
       </div>
 
@@ -1176,7 +1212,7 @@ const installBody = `
         이용에는 인터넷 연결이 필요합니다.<br>
         기기와 브라우저에 따라 메뉴 이름이 다를 수 있습니다.
       </p>
-      <a class="back-link" href="/">아카이브로 돌아가기</a>
+      <a class="back-link" href="/">← 아카이브로 돌아가기</a>
     </div>
   </main>
 `;
