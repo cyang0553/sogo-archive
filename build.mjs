@@ -619,6 +619,7 @@ const createPostCards = postList => postList.map(post => `
   <a
     class="post-card"
     data-kind="${post.type}"
+    data-tags="${escapeHtml((post.tags || []).join(' '))}"
     href="${getPostPath(post)}"
   >
     <span class="post-type">
@@ -715,7 +716,9 @@ const homeBody = `
 
       const matchesQuery =
         !query ||
-        post.textContent.toLowerCase().includes(query);
+        `${post.textContent} ${post.dataset.tags || ''}`
+          .toLowerCase()
+          .includes(query);
 
       post.hidden = !(matchesFilter && matchesQuery);
     });
