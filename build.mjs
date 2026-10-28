@@ -22,6 +22,10 @@ const config = data.config || {};
 await rm(OUT, { recursive: true, force: true });
 await mkdir(OUT, { recursive: true });
 await copyFile('og-image.png', join(OUT, 'og-image.png'));
+await copyFile('favicon.ico', join(OUT, 'favicon.ico'));
+await copyFile('favicon-32x32.png', join(OUT, 'favicon-32x32.png'));
+await copyFile('favicon-16x16.png', join(OUT, 'favicon-16x16.png'));
+await copyFile('apple-touch-icon.png', join(OUT, 'apple-touch-icon.png'));
 
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
@@ -566,6 +570,10 @@ function createPage({
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}">
   <link rel="canonical" href="${escapeHtml(canonical)}">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="${escapeHtml(title)}">
