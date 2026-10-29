@@ -462,6 +462,230 @@ a {
   text-align: center;
 }
 
+.inquiries-page {
+  max-width: 912px;
+  margin: 0 auto;
+  padding: 78px 36px 64px;
+}
+
+.inquiries-intro {
+  margin: 23px 0 48px;
+}
+
+.inquiries-intro h1 {
+  margin: 0 0 24px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.inquiries-page p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.inquiries-page [hidden] {
+  display: none;
+}
+
+.inquiry-form {
+  display: grid;
+  gap: 26px;
+}
+
+.inquiry-required-note {
+  margin: 0;
+  font-size: 11px;
+}
+
+.inquiry-types {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.inquiry-types legend,
+.inquiry-field > label {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.inquiry-type {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+  cursor: pointer;
+}
+
+.inquiry-type:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.inquiry-type input {
+  flex-shrink: 0;
+  margin: 5px 0 0;
+  accent-color: var(--accent);
+}
+
+.inquiry-type > span > span {
+  display: block;
+}
+
+.inquiry-type-name {
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-weight: 400;
+}
+
+.inquiry-type-note {
+  max-width: 560px;
+  margin-top: 10px;
+  font-size: 11px;
+}
+
+.inquiry-field input,
+.inquiry-field textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.inquiry-field input::placeholder,
+.inquiry-field textarea::placeholder {
+  color: var(--muted);
+  opacity: 0.8;
+}
+
+.inquiry-field textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+.inquiry-field input:focus-visible,
+.inquiry-field textarea:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.inquiry-honeypot {
+  display: none;
+}
+
+#inquiry-privacy {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 16px 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+#inquiry-privacy summary {
+  width: fit-content;
+  cursor: pointer;
+}
+
+#inquiry-privacy summary:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.inquiry-privacy-content {
+  padding-top: 12px;
+  overflow-wrap: anywhere;
+}
+
+.inquiry-privacy-content p {
+  margin: 0 0 16px;
+}
+
+.inquiry-privacy-content p:last-child {
+  margin-bottom: 0;
+}
+
+.inquiry-privacy-content strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.inquiry-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.inquiry-consent input {
+  flex-shrink: 0;
+  margin: 4px 0 0;
+  accent-color: var(--accent);
+}
+
+.inquiry-submit {
+  justify-self: start;
+  padding: 12px 24px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.inquiry-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.inquiries-page .inquiry-status {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.inquiries-back {
+  margin-top: 48px;
+}
+
+.inquiries-back .back-link {
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .inquiries-page {
+    padding: 45px 20px;
+  }
+
+  .inquiries-intro h1 {
+    font-size: 25px;
+  }
+
+  .inquiry-field input,
+  .inquiry-field textarea {
+    font-size: 16px;
+  }
+}
+
 .install-page {
   max-width: 912px;
   margin: 0 auto;
@@ -1071,6 +1295,461 @@ await write(
       alternateName: about.activityName || 'SOGO',
       url: `${SITE_URL}/about/`
     }
+  })
+);
+
+const inquiriesBody = `
+  <main class="inquiries-page">
+    <span class="eyebrow">INQUIRIES</span>
+
+    <section class="inquiries-intro">
+      <h1>INQUIRIES · 작업 의뢰</h1>
+      <p>
+        원고 집필과 기타 예술 관련 협업 제안을 받습니다.<br>
+        소규모 미술 강의와 문화예술교육 프로그램은
+        대상과 운영 여건에 따라 협의합니다.
+      </p>
+    </section>
+
+    <p id="inquiry-loading" role="status">
+      문의 양식을 확인하고 있습니다.
+    </p>
+
+    <div id="inquiry-unavailable" hidden>
+      <p>문의는 아래 이메일로 보내주세요.</p>
+      <p>hello.sogoindex@gmail.com</p>
+    </div>
+
+    <form id="inquiry-form" class="inquiry-form" hidden>
+      <p class="inquiry-required-note">* 필수 입력 항목</p>
+
+      <fieldset class="inquiry-types">
+        <legend>문의 유형 *</legend>
+
+        <label class="inquiry-type">
+          <input
+            type="radio"
+            name="type"
+            value="Editorial"
+            required
+          >
+          <span>
+            <span class="inquiry-type-name">Editorial</span>
+            <span>칼럼 / 에세이 / 전시 서문 / 전시 원고</span>
+          </span>
+        </label>
+
+        <label class="inquiry-type">
+          <input
+            type="radio"
+            name="type"
+            value="Education"
+            required
+          >
+          <span>
+            <span class="inquiry-type-name">Education</span>
+            <span>소규모 미술 강의 / 문화예술교육 프로그램</span>
+            <span class="inquiry-type-note">
+              대상과 주제, 운영 방식에 맞춰 사전 준비가 필요합니다.
+              구체적인 내용과 일정은 협의 후 진행 여부를 안내드립니다.
+            </span>
+          </span>
+        </label>
+
+        <label class="inquiry-type">
+          <input
+            type="radio"
+            name="type"
+            value="Collaboration"
+            required
+          >
+          <span>
+            <span class="inquiry-type-name">Collaboration</span>
+            <span>기타 예술 관련 협업</span>
+          </span>
+        </label>
+      </fieldset>
+
+      <div class="inquiry-field">
+        <label for="inquiry-name">이름 / 담당자 *</label>
+        <input
+          id="inquiry-name"
+          name="name"
+          type="text"
+          maxlength="100"
+          autocomplete="name"
+          required
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-email">이메일 *</label>
+        <input
+          id="inquiry-email"
+          name="email"
+          type="email"
+          maxlength="254"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-organization">소속 기관 / 매체</label>
+        <input
+          id="inquiry-organization"
+          name="organization"
+          type="text"
+          maxlength="200"
+          autocomplete="organization"
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-title">의뢰 제목 *</label>
+        <input
+          id="inquiry-title"
+          name="title"
+          type="text"
+          maxlength="200"
+          required
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-schedule">희망 일정</label>
+        <input
+          id="inquiry-schedule"
+          name="schedule"
+          type="text"
+          maxlength="200"
+          placeholder="예: 2026년 12월 중 / 일정 협의 가능"
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-budget">예산 / 사례비</label>
+        <input
+          id="inquiry-budget"
+          name="budget"
+          type="text"
+          maxlength="200"
+          placeholder="예: 30만 원 / 예산 협의 가능"
+        >
+      </div>
+
+      <div class="inquiry-field">
+        <label for="inquiry-message">상세 내용 *</label>
+        <textarea
+          id="inquiry-message"
+          name="message"
+          rows="8"
+          maxlength="10000"
+          required
+        ></textarea>
+      </div>
+
+      <div class="inquiry-honeypot" aria-hidden="true" inert>
+        <label for="inquiry-website">Website</label>
+        <input
+          id="inquiry-website"
+          name="website"
+          type="text"
+          autocomplete="off"
+        >
+      </div>
+
+<div id="inquiry-privacy">
+  <details>
+    <summary>개인정보 수집·이용 안내</summary>
+
+    <div class="inquiry-privacy-content">
+      <p>
+        소고(SOGO · 정지호)는 제출한 정보를 문의 검토와
+        답변, 협업 진행 여부를 협의하는 데 이용합니다.
+      </p>
+
+      <p>
+        <strong>수집 항목</strong><br>
+        필수: 문의 유형, 이름 / 담당자, 이메일, 의뢰 제목,
+        상세 내용<br>
+        선택: 소속 기관 / 매체, 희망 일정, 예산 / 사례비
+      </p>
+
+      <p>
+        <strong>보유 및 이용 기간</strong><br>
+        실제 작업으로 이어지지 않은 문의는 상담 종료 후
+        6개월 이내에 삭제합니다.
+        상담 종료일은 진행하지 않기로 확정한 날,
+        또는 마지막 회신 후 추가 연락 없이 20일이 지난 날입니다.
+        실제 작업으로 이어지는 경우에는 계약 단계에서
+        관련 정보의 이용 목적과 보관기간을 별도로 안내합니다.
+      </p>
+
+      <p>
+        <strong>동의 거부 안내</strong><br>
+        동의를 거부할 수 있으나, 필수 정보의 수집·이용에
+        동의하지 않으면 이 양식으로 문의를 제출할 수 없습니다.
+        선택 항목은 입력하지 않아도 문의할 수 있습니다.
+      </p>
+
+      <p>
+        <strong>공개 및 포트폴리오 이용</strong><br>
+        문의 내용과 연락처는 공개하지 않습니다.
+        실제 진행한 작업의 결과물과 수행 이력은
+        공개 범위·시점에 대한 별도 합의 후
+        포트폴리오에 소개할 수 있습니다.
+      </p>
+
+      <p>
+        <strong>개인정보 관련 문의</strong><br>
+        정보의 열람·정정·삭제 또는 동의 철회는
+        hello.sogoindex@gmail.com으로 요청할 수 있습니다.
+      </p>
+    </div>
+  </details>
+</div>
+
+<label class="inquiry-consent">
+  <input
+    id="inquiry-consent"
+    name="consent"
+    type="checkbox"
+    required
+  >
+  <span>개인정보 수집·이용에 동의합니다. *</span>
+</label>
+
+      <div id="inquiry-turnstile"></div>
+
+      <button
+        class="inquiry-submit"
+        id="inquiry-submit"
+        type="submit"
+        disabled
+      >문의 보내기</button>
+
+      <p
+        id="inquiry-status"
+        class="inquiry-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+    </form>
+
+    <div class="inquiries-back">
+      <a class="back-link" href="/about/">← 소개로 돌아가기</a>
+    </div>
+  </main>
+    <script>
+    (() => {
+      const form = document.getElementById('inquiry-form');
+      const loading = document.getElementById('inquiry-loading');
+      const unavailable = document.getElementById('inquiry-unavailable');
+      const submitButton = document.getElementById('inquiry-submit');
+
+      form.hidden = true;
+      unavailable.hidden = true;
+      submitButton.disabled = true;
+
+      let submitting = false;
+      let submissionUncertain = false;
+
+      form.addEventListener('submit', async event => {
+        event.preventDefault();
+
+        if (submitting || submissionUncertain) return;
+        if (!form.reportValidity()) return;
+
+        const status = document.getElementById('inquiry-status');
+        const token = form.dataset.securityToken;
+
+        if (!token) {
+          status.textContent = '보안 확인을 완료해 주세요.';
+          return;
+        }
+
+        const fields = new FormData(form);
+
+        const payload = {
+          language: 'ko',
+          type: fields.get('type') || '',
+          name: fields.get('name') || '',
+          email: fields.get('email') || '',
+          organization: fields.get('organization') || '',
+          title: fields.get('title') || '',
+          schedule: fields.get('schedule') || '',
+          budget: fields.get('budget') || '',
+          message: fields.get('message') || '',
+          consent: document.getElementById('inquiry-consent').checked
+        };
+
+        submitting = true;
+        submitButton.disabled = true;
+        submitButton.textContent = '전송 중…';
+        status.textContent = '문의 내용을 전송하고 있습니다. 잠시 기다려 주세요.';
+
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 45000);
+
+        try {
+          const response = await fetch('/api/inquiries/submit', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            signal: controller.signal,
+            body: JSON.stringify({
+              requestId: crypto.randomUUID(),
+              token: token,
+              website: fields.get('website') || '',
+              payload: payload
+            })
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.ok === true) {
+            form.reset();
+
+            status.textContent =
+              '문의가 전송되었습니다. 내용을 확인한 뒤 남겨주신 이메일로 회신드리겠습니다.';
+          } else {
+            if (result.uncertain === true || response.status >= 500) {
+              submissionUncertain = true;
+            }
+
+            status.textContent =
+              typeof result.message === 'string'
+                ? result.message
+                : '전송을 완료하지 못했습니다. 입력 내용은 유지됩니다.';
+          }
+        } catch (error) {
+          submissionUncertain = true;
+
+          status.textContent =
+            '전송 결과를 확인하지 못했습니다. 중복 접수를 피하기 위해 다시 보내지 말고, hello.sogoindex@gmail.com으로 접수 여부를 확인해 주세요. 입력 내용은 유지됩니다.';
+        } finally {
+          clearTimeout(timeout);
+          submitting = false;
+          delete form.dataset.securityToken;
+
+          submitButton.disabled = true;
+          submitButton.textContent = '문의 보내기';
+
+          if (window.turnstile) {
+            window.turnstile.reset();
+          }
+        }
+      });
+
+      async function loadInquiryConfig() {
+        try {
+          const response = await fetch('/api/inquiries/config', {
+            cache: 'no-store',
+            headers: {
+              Accept: 'application/json'
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error('문의 설정을 불러오지 못했습니다.');
+          }
+
+          const config = await response.json();
+
+          if (
+            config.ok !== true ||
+            typeof config.enabled !== 'boolean'
+          ) {
+            throw new Error('문의 설정을 확인하지 못했습니다.');
+          }
+
+          if (!config.enabled) {
+            unavailable.hidden = false;
+            return;
+          }
+
+          if (
+            typeof config.siteKey !== 'string' ||
+            !config.siteKey.trim()
+          ) {
+            throw new Error('문의 보안 설정을 확인하지 못했습니다.');
+          }
+
+          const securityScript = document.createElement('script');
+
+          securityScript.src =
+            'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+          securityScript.async = true;
+
+          securityScript.onload = () => {
+            try {
+              window.turnstile.render('#inquiry-turnstile', {
+                sitekey: config.siteKey,
+                action: 'sogo_inquiry',
+                responseField: false,
+
+                callback: token => {
+                  if (submitting || submissionUncertain) {
+                    delete form.dataset.securityToken;
+                    submitButton.disabled = true;
+                    return;
+                  }
+
+                  form.dataset.securityToken = token;
+                  submitButton.disabled = false;
+                },
+
+                'expired-callback': () => {
+                  delete form.dataset.securityToken;
+                  submitButton.disabled = true;
+                },
+
+                'error-callback': () => {
+                  delete form.dataset.securityToken;
+                  submitButton.disabled = true;
+
+                  if (!submitting && !submissionUncertain) {
+                    document.getElementById('inquiry-status').textContent =
+                      '보안 확인을 완료하지 못했습니다. 잠시 후 다시 시도하거나 페이지를 새로고침해 주세요.';
+                  }
+                }
+              });
+
+              form.hidden = false;
+            } catch (error) {
+              form.hidden = true;
+              unavailable.hidden = false;
+            }
+          };
+
+          securityScript.onerror = () => {
+            form.hidden = true;
+            unavailable.hidden = false;
+          };
+
+          document.head.appendChild(securityScript);
+        } catch (error) {
+          unavailable.hidden = false;
+        } finally {
+          loading.hidden = true;
+        }
+      }
+
+      loadInquiryConfig();
+    })();
+  </script>
+`;
+
+await write(
+  'inquiries/index.html',
+  createPage({
+    title: 'INQUIRIES · 작업 의뢰 — ' + config.title,
+    description: '원고 집필, 문화예술교육 프로그램, 소규모 미술 강의 및 예술 관련 협업 문의.',
+    canonical: SITE_URL + '/inquiries/',
+    body: inquiriesBody
   })
 );
 
