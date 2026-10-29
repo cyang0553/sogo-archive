@@ -374,6 +374,31 @@ a {
   border-top: 0;
 }
 
+.contact-links {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  min-width: 0;
+}
+
+#about-inquiries-link {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid var(--line);
+}
+
+#about-inquiries-link[hidden] {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .contact-links {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
 .elsewhere-links {
   display: flex;
   gap: 10px 30px;
@@ -1264,7 +1289,14 @@ const aboutBody = `
       ? `
         <div class="meta">
           <span>CONTACT</span>
-          <span>${escapeHtml(about.email)}</span>
+          <span class="contact-links">
+            <span>${escapeHtml(about.email)}</span>
+            <a
+              id="about-inquiries-link"
+              href="/inquiries/"
+              hidden
+            >Inquiries</a>
+          </span>
         </div>
 
         <div class="meta elsewhere-meta">
@@ -1279,6 +1311,39 @@ const aboutBody = `
     }
   </article>
 </main>
+<script>
+  (() => {
+    const link = document.getElementById('about-inquiries-link');
+
+    if (!link) return;
+
+    async function updateInquiryLink() {
+      link.hidden = true;
+
+      try {
+        const response = await fetch('/api/inquiries/config', {
+          cache: 'no-store',
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        if (!response.ok) return;
+
+        const result = await response.json();
+
+        link.hidden = !(
+          result.ok === true &&
+          result.enabled === true
+        );
+      } catch (error) {
+        link.hidden = true;
+      }
+    }
+
+    updateInquiryLink();
+  })();
+</script>
 `;
 
 await write(
